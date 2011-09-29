@@ -1,4 +1,5 @@
 package ssen.log {
+
 import mx.core.IMXMLObject;
 
 [DefaultProperty("tracers")]
@@ -6,14 +7,32 @@ import mx.core.IMXMLObject;
  * Debug 용 Logger
  */
 public class SSenLogger implements IMXMLObject {
+
+	/* *********************************************************************
+	 * global setting
+	 ********************************************************************* */
 	/** logger 의 전체 활성화 여부 */
 	public static var enabled : Boolean = true;
-	/** Log 에 사용할 Tracer 들을 지정 */
-	public var tracers : Vector.<ISSenLoggerTracer> = Vector.<ISSenLoggerTracer>([new ConsoleTracer]);
+
+	/** 기본 사용할 tracer */
+	public static var defaultTracers : Vector.<Class> = Vector.<Class>([ConsoleTracer]);
+
+	/* *********************************************************************
+	 * local setting
+	 ********************************************************************* */
+	private var tracers : Vector.<ISSenLoggerTracer>;
 
 	public function SSenLogger(clazz : Object = null, ... tracers : Array) {
 		if (tracers.length > 0) {
 			this.tracers = Vector.<ISSenLoggerTracer>(tracers);
+		} else {
+			this.tracers = new Vector.<ISSenLoggerTracer>();
+			var f : int = defaultTracers.length;
+			var cls : Class;
+			while (--f >= 0) {
+				cls = defaultTracers[f];
+				this.tracers.push(new cls());
+			}
 		}
 
 		if (clazz != null) {
