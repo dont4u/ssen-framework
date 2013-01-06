@@ -29,6 +29,8 @@ public class Actor implements IDeconstructable {
 			_wire = null;
 		}
 	}
+   
+   trace("hello");
 
 }
 }
